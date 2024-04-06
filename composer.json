@@ -1,0 +1,45 @@
+{
+    "name": "iicn/subscription",
+    "description": "A short description of what your package does",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "google/apiclient": "^2.15.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "IICN\\Subscription\\": "src/"
+        },
+        "classmap": [
+            "database/factories/",
+            "database/seeders/"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "IICN\\Subscription\\SubscriptionServiceProvider"
+            ],
+            "aliases": {
+                "Subscription": "IICN\\Subscription\\Subscription"
+            }
+        },
+        "google/apiclient-services": [
+            "Drive",
+            "YouTube"
+        ]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5.5",
+        "orchestra/testbench": "^8.20.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "IICN\\Subscription\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "pre-autoload-dump": "Google\\Task\\Composer::cleanup"
+    }
+}
