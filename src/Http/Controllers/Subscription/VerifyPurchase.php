@@ -5,6 +5,7 @@ namespace IICN\Subscription\Http\Controllers\Subscription;
 use IICN\Subscription\Constants\Status;
 use IICN\Subscription\Http\Controllers\Controller;
 use IICN\Subscription\Http\Requests\VerifyPurchaseRequest;
+use IICN\Subscription\Models\SubscriptionLog;
 use IICN\Subscription\Models\SubscriptionTransaction;
 use IICN\Subscription\Services\Purchase\Appstore;
 use IICN\Subscription\Services\Purchase\Playstore;
@@ -12,11 +13,68 @@ use IICN\Subscription\Services\Purchase\Purchase;
 use IICN\Subscription\Services\Response\SubscriptionResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Contracts\Cache\LockTimeoutException;
+use Illuminate\Support\Facades\Auth;
 
 class VerifyPurchase extends Controller
 {
+    /**
+     * @OA\Post(
+     *     path="/subscription/api/v1/subscriptions/verify-purchase",
+     *     operationId="verifyPurchase",
+     *     tags={"Subscription"},
+     *     summary="verify purchase",
+     *     description="verify purchase",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(ref="#/components/parameters/AcceptLanguageHeader"),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Requirements",
+     *         @OA\JsonContent(
+     *             required={"gateway", "skuCode", "purchaseToken", "orderId"},
+     *             @OA\Property(
+     *                 property="gateway",
+     *                 type="string",
+     *                 example="appStore OR playStore"
+     *             ),
+     *             @OA\Property(
+     *                 property="skuCode",
+     *                 type="string",
+     *                 description="sku_code of subscription"
+     *             ),
+     *             @OA\Property(
+     *                 property="purchaseToken",
+     *                 type="string",
+     *                 description="purchaseToken of store"
+     *             ),
+     *             @OA\Property(
+     *                 property="orderId",
+     *                 type="string",
+     *                 description="orderId of store"
+     *             ),
+     *             @OA\Property(
+     *                 property="price",
+     *                 type="string",
+     *                 example="9.9 $"
+     *             ),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description=""
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
     public function __invoke(VerifyPurchaseRequest $request)
     {
+        SubscriptionLog::qeury()->create([
+            'user_id' => Auth::guard(config('subscription.guard'))->id(),
+            'new' => ['body' => $request->validated(), 'headers' => $request->headers->all()],
+        ]);
+
         $lock = Cache::lock('transaction_order_id_' . $request->validated('orderId'), 10);
 
         try {

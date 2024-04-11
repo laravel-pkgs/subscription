@@ -11,6 +11,37 @@ use Illuminate\Support\Facades\DB;
 
 class StoreWithSubscriptionCoupon extends Controller
 {
+    /**
+     * @OA\Post(
+     *     path="/subscription/api/v1/subscription-coupons",
+     *     operationId="subscriptionCoupons",
+     *     tags={"subscriptionCoupon"},
+     *     summary="use subscription coupons",
+     *     description="use subscription coupons",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(ref="#/components/parameters/AcceptLanguageHeader"),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Requirements",
+     *         @OA\JsonContent(
+     *             required={"code"},
+     *             @OA\Property(
+     *                 property="code",
+     *                 type="string",
+     *                 description="code of subscription code"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description=""
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
     public function __invoke(StoreWithSubscriptionCouponRequest $request)
     {
         $subscriptionCoupon = SubscriptionCoupon::query()->find($request->validated('subscription_coupon_id'));

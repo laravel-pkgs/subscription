@@ -4,7 +4,11 @@ namespace IICN\Subscription\Services;
 
 use Carbon\Carbon;
 use IICN\Subscription\HasSubscription;
+use IICN\Subscription\Models\SubscriptionAbility;
+use IICN\Subscription\Models\SubscriptionAbilityLog;
 use IICN\Subscription\Models\SubscriptionUser;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class Subscription
 {
@@ -52,19 +56,35 @@ class Subscription
             return false;
         }
 
-        $data = $subscription[0]->pivot->remaining_number;
+        return DB::transaction(function () use ($subscription, $type) {
+            $lastPivot = $subscription[0]->pivot;
 
-        $data[$type] = ((int) ($data[$type]) - 1);
+            $data = $subscription[0]->pivot->remaining_number;
 
-        $subscription[0]->pivot->remaining_number = $data;
+            $countType = ((int) ($data[$type]) - 1);
 
-        if ($data[$type] == 0 and $subscription[0]->pivot->expiry_at == null) {
-            $subscription[0]->pivot->expiry_at = Carbon::now();
-        }
+            $data[$type] = $countType;
 
-        $subscription[0]->pivot->save();
+            $subscription[0]->pivot->remaining_number = $data;
 
-        return true;
+            if ($data[$type] == 0 and $subscription[0]->pivot->expiry_at == null) {
+                $subscription[0]->pivot->expiry_at = Carbon::now();
+            }
+
+            $subscription[0]->pivot->save();
+
+            $subscriptionAbility = SubscriptionAbility::query()->where('type', $type)->first();
+
+            if ($subscriptionAbility) {
+                SubscriptionAbilityLog::query()->create([
+                    'subscription_user_id' => $lastPivot->id,
+                    'subscription_ability_id' => $subscriptionAbility->id,
+                    'user_id' => Auth::guard(config('subscription.guard'))->id(),
+                ]);
+            }
+
+            return true;
+        });
     }
 
     public function getActiveWithCount(string $type): array
