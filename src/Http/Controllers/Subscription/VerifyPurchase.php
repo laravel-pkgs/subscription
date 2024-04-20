@@ -70,7 +70,7 @@ class VerifyPurchase extends Controller
      */
     public function __invoke(VerifyPurchaseRequest $request)
     {
-        SubscriptionLog::qeury()->create([
+        SubscriptionLog::query()->create([
             'user_id' => Auth::guard(config('subscription.guard'))->id(),
             'new' => ['body' => $request->validated(), 'headers' => $request->headers->all()],
         ]);
