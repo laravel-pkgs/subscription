@@ -34,4 +34,11 @@ class Index extends Controller
 
         return SubscriptionResources::collection($subscriptions);
     }
+
+    public function indexSubscriptions(): AnonymousResourceCollection
+    {
+        $subscriptions = Subscription::query()->where('sku_code', 'like', '%subscription%')->withLanguage(app()->getLocale())->get();
+
+        return SubscriptionResources::collection($subscriptions);
+    }
 }
