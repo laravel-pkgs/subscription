@@ -21,6 +21,7 @@ class SubscriptionResources extends JsonResource
             'count' => $this->count ?? 0,
             'description' => $this->description_client ?? '',
             'subscriptionAbilities' => SubscriptionAbilityResources::collection($this->whenLoaded('subscriptionAbilities')),
+            'priority' => $this->priority ?? 0,
         ];
     }
 }
