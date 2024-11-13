@@ -144,7 +144,7 @@ class VerifyPurchase extends Controller
                 return SubscriptionResponse::data(['purchase_status' => Status::FAILED], trans('subscription::messages.payment_not_valid'));
             }
 
-            $result = $playstore->verifySubscription($attribute['skuCode'], $attribute['purchaseToken'], $attribute['orderId']);
+            $result = $playstore->verifySubscription($attribute['skuCode'], $attribute['purchaseToken'], $attribute['orderId'], 0);
 
             $message = $this->getMessage($result['transaction']);
 
