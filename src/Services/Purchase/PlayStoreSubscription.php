@@ -51,14 +51,13 @@ class PlayStoreSubscription implements HasVerifyPurchase
 
         $status = $this->getStatus($result->getPaymentState() ?? -1);
 
-
         $startAt = Carbon::createFromTimestampMs($result->getStartTimeMillis());
         $expiryDate = Carbon::createFromTimestampMs($result->getExpiryTimeMillis());
 
         $duration = $expiryDate->diffInDays($startAt);
 
         $productNameSections = explode('-', $transaction->product_id);
-        $subscription = \IICN\Subscription\Models\Subscription::query()->where('duration', $duration)->where('type', $productNameSections[0])->first();
+        $subscription = \IICN\Subscription\Models\Subscription::query()->where('duration_day', $duration)->where('type', $productNameSections[0])->firstOrFail();
         $transaction->subscription_id = $subscription->id;
         $transaction->save();
 
@@ -80,6 +79,7 @@ class PlayStoreSubscription implements HasVerifyPurchase
             1 => Status::SUCCESS,
             2 => Status::FREE_TRIAL,
             3 => Status::DEFERRED_PAYMENT,
+            default => Status::FAILED,
         };
     }
 
