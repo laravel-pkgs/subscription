@@ -56,7 +56,7 @@ class PlayStoreSubscription implements HasVerifyPurchase
 
         $duration = $expiryDate->diffInDays($startAt);
 
-        $productNameSections = explode('-', $transaction->product_id);
+        $productNameSections = explode('_', $transaction->product_id);
         $subscription = \IICN\Subscription\Models\Subscription::query()->where('duration_day', $duration)->where('type', $productNameSections[0])->firstOrFail();
         $transaction->subscription_id = $subscription->id;
         $transaction->save();
