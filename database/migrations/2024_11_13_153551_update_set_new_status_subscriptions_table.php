@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
 
-        \DB::statement("ALTER TABLE `subscriptions` CHANGE `status` `status` ENUM('success','failed','int', 'pending', 'free_trial', 'deferred_payment') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'int';");
+        \DB::statement("ALTER TABLE `subscriptions` CHANGE `subscriptions` `status` ENUM('success','failed','int', 'pending', 'free_trial', 'deferred_payment') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'int';");
     }
 
     /**
