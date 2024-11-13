@@ -46,6 +46,41 @@ class Purchase
         return $this->purchaseClass->verifyPurchase($transaction);
     }
 
+    public function verifySubscription(string $productId, string $purchaseToken, $orderId, $price): array
+    {
+
+        $additionalDataClass = config('subscription.additional_data_transaction');
+
+        $additionalData = [];
+
+        if (app($additionalDataClass) instanceof TransactionalData) {
+            $transactionalData = new $additionalDataClass();
+            $additionalData = array_merge($transactionalData->additionalData(), $additionalData);
+        }
+
+        $priceArr = explode(" ", $price);
+
+        $transaction = SubscriptionTransaction::query()->create([
+            'user_id' => Auth::guard(config('subscription.guard'))->id(),
+            'subscription_id' => null,
+            'agent_type' => $this->purchaseClass->getAgentType(),
+            'purchase_token' => $purchaseToken,
+            'order_id' => $orderId,
+            'product_id' => $productId,
+            'additional_data' => $additionalData,
+            'price' => floatval($priceArr[0] ?? "0.00"),
+            'price_unit' => $priceArr[1] ?? null,
+        ]);
+
+        $verifiedResult = $this->purchaseClass->verifyPurchase($transaction);
+
+        $subscription = Subscription::query()->where('sku_code', $productId)->first();
+
+        return $verifiedResult;
+
+    }
+
+
     public function retry(SubscriptionTransaction $subscriptionTransaction): array
     {
         return DB::transaction(function () use ($subscriptionTransaction) {

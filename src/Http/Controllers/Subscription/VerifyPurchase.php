@@ -9,6 +9,7 @@ use IICN\Subscription\Models\SubscriptionLog;
 use IICN\Subscription\Models\SubscriptionTransaction;
 use IICN\Subscription\Services\Purchase\Appstore;
 use IICN\Subscription\Services\Purchase\Playstore;
+use IICN\Subscription\Services\Purchase\PlayStoreSubscription;
 use IICN\Subscription\Services\Purchase\Purchase;
 use IICN\Subscription\Services\Response\SubscriptionResponse;
 use Illuminate\Support\Facades\Cache;
@@ -106,6 +107,56 @@ class VerifyPurchase extends Controller
             $lock?->release();
         }
     }
+
+
+
+    public function verifyPurchaseSubscription()
+    {
+        $attribute = request()->validate([
+            'gateway' => 'required|in:appStore,playStore',
+            'skuCode' => 'required|string|max:100',
+            'purchaseToken' => 'required|string',
+            'orderId' => 'required|string|max:250',
+            'price' => 'nullable|string',
+        ]);
+
+        SubscriptionLog::query()->create([
+            'user_id' => Auth::guard(config('subscription.guard'))->id(),
+            'new' => ['body' => $attribute, 'headers' => request()->headers->all()],
+        ]);
+
+        $lock = Cache::lock('transaction_order_id_' . $attribute['orderId'], 10);
+
+        try {
+            $lock->block(5);
+
+            $subscriptionTransaction = SubscriptionTransaction::query()->where('order_id', $attribute['orderId'])->first();
+
+            if ($subscriptionTransaction) {
+                $message = $this->getMessage($subscriptionTransaction);
+                return SubscriptionResponse::data(['purchase_status' => $subscriptionTransaction->status], $message);
+            }
+
+
+            if($attribute['gateway'] == 'playStore') {
+                $playstore = new Purchase(new PlayStoreSubscription());
+            } else {
+                return SubscriptionResponse::data(['purchase_status' => Status::FAILED], trans('subscription::messages.payment_not_valid'));
+            }
+
+            $result = $playstore->verifySubscription($attribute['skuCode'], $attribute['purchaseToken'], $attribute['orderId']);
+
+            $message = $this->getMessage($result['transaction']);
+
+            return SubscriptionResponse::data(['purchase_status' => $result['transaction']->status], $message);
+        } catch (LockTimeoutException $e) {
+            return SubscriptionResponse::data(['purchase_status' => Status::FAILED], trans('subscription::messages.payment_not_valid'));
+        } finally {
+            $lock?->release();
+        }
+
+    }
+
 
     private function getMessage($transaction): string
     {

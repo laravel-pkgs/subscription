@@ -8,4 +8,10 @@ class Status
     const FAILED = 'failed';
     const INIT = 'int';
     const PENDING = 'pending';
+
+    const FREE_TRIAL = 'free_trial';
+
+    const DEFERRED_PAYMENT = 'deferred_payment';
+
+
 }
