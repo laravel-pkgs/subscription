@@ -62,7 +62,7 @@ class Purchase
 
         $transaction = SubscriptionTransaction::query()->create([
             'user_id' => Auth::guard(config('subscription.guard'))->id(),
-            'subscription_id' => null,
+            'subscription_id' => 999999,
             'agent_type' => $this->purchaseClass->getAgentType(),
             'purchase_token' => $purchaseToken,
             'order_id' => $orderId,
