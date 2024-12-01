@@ -10,9 +10,12 @@ use IICN\Subscription\Constants\Status;
 use IICN\Subscription\Models\SubscriptionTransaction;
 use IICN\Subscription\Services\Purchase\Traits\Transaction;
 use IICN\Subscription\Services\Subscription;
+use IICN\Subscription\Services\Purchase\Traits\Transaction;
 
 class PlayStoreSubscription implements HasVerifyPurchase
 {
+    use Transaction;
+
     public $service;
     public string $packageName;
 
@@ -64,7 +67,10 @@ class PlayStoreSubscription implements HasVerifyPurchase
         }
 
         $productNameSections = explode('_', $transaction->product_id);
-        $subscription = \IICN\Subscription\Models\Subscription::query()->where('duration_day', $duration)->where('type', $productNameSections[0])->firstOrFail();
+        $subscription = \IICN\Subscription\Models\Subscription::query()
+            ->orderByRaw('ABS(duration_day - ?) asc', [$duration])
+            ->where('type', $productNameSections[0])
+            ->firstOrFail();
         $transaction->subscription_id = $subscription->id;
         $transaction->save();
 
@@ -96,30 +102,4 @@ class PlayStoreSubscription implements HasVerifyPurchase
         return AgentType::GOOGLE_PLAY;
     }
 
-    public function verifyTransaction(SubscriptionTransaction $transaction, array $response): SubscriptionTransaction
-    {
-        $transaction->status = Status::SUCCESS;
-        $transaction->response_data = $response;
-
-        try {
-            $subscriptionUserId = Subscription::create($transaction->subscription_id);
-            if ($subscriptionUserId) {
-                $transaction->subscription_user_id = $subscriptionUserId;
-            }
-        } catch (\Exception) {
-
-        }
-
-        $transaction->save();
-
-        return $transaction;
-    }
-
-    public function failedTransaction(SubscriptionTransaction $transaction, array $response, string $status): SubscriptionTransaction
-    {
-        $transaction->status = $status;
-        $transaction->response_data = $response;
-        $transaction->save();
-        return $transaction;
-    }
 }
