@@ -141,12 +141,17 @@ class VerifyPurchase extends Controller
             if($attribute['gateway'] == 'playStore') {
                 $playstore = new Purchase(new PlayStoreSubscription());
             } else {
-                return SubscriptionResponse::data(['purchase_status' => Status::FAILED], trans('subscription::messages.payment_not_valid'));
+                return response()->json([
+                    'message' => $message,
+                    'data' => ['purchase_status' => $subscriptionTransaction->status],
+                    'status' => 1
+                ], 500);
             }
 
             $result = $playstore->verifySubscription($attribute['skuCode'], $attribute['purchaseToken'], $attribute['orderId'], 0);
 
             $message = $this->getMessage($result['transaction']);
+
 
             return response()->json([
                 'message' => $message,
