@@ -157,7 +157,7 @@ class VerifyPurchase extends Controller
         } catch (LockTimeoutException $e) {
             return response()->json([
                 'message' => $message,
-                'data' => ['purchase_status' => $result['transaction']->status],
+                'data' => ['purchase_status' => Status::FAILED],
                 'status' => 0
             ], 500);
             // return SubscriptionResponse::data(['purchase_status' => Status::FAILED], trans('subscription::messages.payment_not_valid'));
