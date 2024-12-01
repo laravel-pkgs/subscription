@@ -9,8 +9,6 @@ use IICN\Subscription\Constants\AgentType;
 use IICN\Subscription\Constants\Status;
 use IICN\Subscription\Models\SubscriptionTransaction;
 use IICN\Subscription\Services\Purchase\Traits\Transaction;
-use IICN\Subscription\Services\Subscription;
-use IICN\Subscription\Services\Purchase\Traits\Transaction;
 
 class PlayStoreSubscription implements HasVerifyPurchase
 {
