@@ -3,6 +3,7 @@
 namespace IICN\Subscription\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Str;
 
 class SubscriptionResources extends JsonResource
 {
@@ -17,6 +18,8 @@ class SubscriptionResources extends JsonResource
             'price' => $this->price,
             'discount_percent' => $this->discount_percent ?? 0,
             'sku_code' => $this->sku_code ?? '',
+            // 1 for android 2 for ios
+            'apple_sku_code' => request()->header('agent-type', 1) == 1 ? $this->sku_code : Str::replace('-', '_', "{$this->sku_code}"),
             'type' => $this->type ?? '',
             'count' => $this->count ?? 0,
             'description' => $this->description_client ?? '',
