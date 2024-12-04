@@ -8,6 +8,7 @@ use IICN\Subscription\Http\Requests\VerifyPurchaseRequest;
 use IICN\Subscription\Models\SubscriptionLog;
 use IICN\Subscription\Models\SubscriptionTransaction;
 use IICN\Subscription\Services\Purchase\Appstore;
+use IICN\Subscription\Services\Purchase\AppStoreSubscription;
 use IICN\Subscription\Services\Purchase\Playstore;
 use IICN\Subscription\Services\Purchase\PlayStoreSubscription;
 use IICN\Subscription\Services\Purchase\Purchase;
@@ -140,9 +141,12 @@ class VerifyPurchase extends Controller
 
             if($attribute['gateway'] == 'playStore') {
                 $playstore = new Purchase(new PlayStoreSubscription());
+            } elseif ($attribute['gateway'] == 'appStore') {
+
+                $playstore = new Purchase(new AppStoreSubscription());
             } else {
                 return response()->json([
-                    'message' => $message,
+                    'message' => '',
                     'data' => ['purchase_status' => $subscriptionTransaction->status],
                     'status' => 1
                 ], 500);
@@ -161,7 +165,7 @@ class VerifyPurchase extends Controller
             // return SubscriptionResponse::data(['purchase_status' => $result['transaction']->status], $message);
         } catch (LockTimeoutException $e) {
             return response()->json([
-                'message' => $message,
+                'message' => 'payment failed',
                 'data' => ['purchase_status' => Status::FAILED],
                 'status' => 0
             ], 500);

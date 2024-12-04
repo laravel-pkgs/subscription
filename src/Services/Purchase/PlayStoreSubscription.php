@@ -67,6 +67,7 @@ class PlayStoreSubscription implements HasVerifyPurchase
         $productNameSections = explode('_', $transaction->product_id);
         $subscription = \IICN\Subscription\Models\Subscription::query()
             ->orderByRaw('ABS(duration_day - ?) asc', [$duration])
+            ->where('price', '=', 0)
             ->where('type', $productNameSections[0])
             ->firstOrFail();
         $transaction->subscription_id = $subscription->id;
