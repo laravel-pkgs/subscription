@@ -86,7 +86,7 @@ class CafeBazaarSubscription implements HasVerifyPurchase
 
     public function getAgentType(): string
     {
-        return AgentType::APP_STORE;
+        return AgentType::CAFE_BAZAAR;
     }
 
 }
