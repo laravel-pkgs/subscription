@@ -42,21 +42,11 @@ class CafeBazaarSubscription implements HasVerifyPurchase
             ->where('sku_code', $skuCode)
             ->firstOrFail();
 
-//        $status = $this->getStatus($response->json('status'));
         $transaction = $this->verifyTransaction($transaction, $response->json());
-        return ['status' => true, 'transaction' => $transaction];
+        $transaction->subscription_id = $subscription->id;
+        $transaction->save();
 
-//        if ($status == Status::SUCCESS || $response->json('status') == 21007) {
-//            $response = $this->request($transaction->purchase_token, "https://sandbox.itunes.apple.com/verifyReceipt/");
-//            $transaction->subscription_id = $subscription->id;
-//            $transaction->save();
-//
-//            $transaction = $this->verifyTransaction($transaction, $response->json());
-//            return ['status' => true, 'transaction' => $transaction];
-//        } else {
-//            $transaction = $this->failedTransaction($transaction, $response->json(), $status);
-//            return ['status' => false, 'transaction' => $transaction];
-//        }
+        return ['status' => true, 'transaction' => $transaction];
     }
 
     public function getStatus($status): string

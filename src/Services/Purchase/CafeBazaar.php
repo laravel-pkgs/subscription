@@ -70,8 +70,6 @@ class CafeBazaar implements HasVerifyPurchase
             return Http::withHeaders([
                 'CAFEBAZAAR-PISHKHAN-API-SECRET' => env('CAFEBAZAAR_API_SECRET'),
                 'accept' => 'application/json',
-                #https://pardakht.cafebazaar.ir/devapi/v2/api/validate/<package_name>/inapp/<product_id>/purchases/<purchase_token>/
-
             ])->post("https://pardakht.cafebazaar.ir/devapi/v2/api/validate/$packageName/inapp/$subscriptionName/purchases/$purchaseToken/");
         } catch (\Exception) {
 
