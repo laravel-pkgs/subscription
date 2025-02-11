@@ -26,7 +26,7 @@ class VerifyPurchaseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'gateway' => 'required|in:appStore,playStore',
+            'gateway' => 'required|in:appStore,playStore,cafeBazaar',
             'skuCode' => 'required|string|max:100|exists:subscriptions,sku_code',
             'purchaseToken' => 'required|string',
             'orderId' => 'required|string|max:250',

@@ -9,6 +9,7 @@ use IICN\Subscription\Models\SubscriptionLog;
 use IICN\Subscription\Models\SubscriptionTransaction;
 use IICN\Subscription\Services\Purchase\Appstore;
 use IICN\Subscription\Services\Purchase\AppStoreSubscription;
+use IICN\Subscription\Services\Purchase\CafeBazaar;
 use IICN\Subscription\Services\Purchase\CafeBazaarSubscription;
 use IICN\Subscription\Services\Purchase\Playstore;
 use IICN\Subscription\Services\Purchase\PlayStoreSubscription;
@@ -94,7 +95,9 @@ class VerifyPurchase extends Controller
                 $playstore = new Purchase(new Appstore());
             } elseif($request->gateway == 'playStore') {
                 $playstore = new Purchase(new Playstore());
-            } else {
+            } elseif($request->gateway == 'cafeBazaar') {
+                $playstore = new Purchase(new CafeBazaar());
+            }  else {
                 return SubscriptionResponse::data(['purchase_status' => Status::FAILED], trans('subscription::messages.payment_not_valid'));
             }
 
