@@ -139,7 +139,12 @@ class VerifyPurchase extends Controller
 
             if ($subscriptionTransaction) {
                 $message = $this->getMessage($subscriptionTransaction);
-                return SubscriptionResponse::data(['purchase_status' => $subscriptionTransaction->status], $message);
+                return response()->json([
+                    'message' => '',
+                    'data' => ['purchase_status' => $subscriptionTransaction->status],
+                    'status' => 1
+                ], 200);
+//                return SubscriptionResponse::data(['purchase_status' => $subscriptionTransaction->status], $message);
             }
 
 
