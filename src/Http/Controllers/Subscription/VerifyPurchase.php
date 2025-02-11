@@ -9,6 +9,7 @@ use IICN\Subscription\Models\SubscriptionLog;
 use IICN\Subscription\Models\SubscriptionTransaction;
 use IICN\Subscription\Services\Purchase\Appstore;
 use IICN\Subscription\Services\Purchase\AppStoreSubscription;
+use IICN\Subscription\Services\Purchase\CafeBazaarSubscription;
 use IICN\Subscription\Services\Purchase\Playstore;
 use IICN\Subscription\Services\Purchase\PlayStoreSubscription;
 use IICN\Subscription\Services\Purchase\Purchase;
@@ -114,7 +115,7 @@ class VerifyPurchase extends Controller
     public function verifyPurchaseSubscription()
     {
         $attribute = request()->validate([
-            'gateway' => 'required|in:appStore,playStore',
+            'gateway' => 'required|in:appStore,playStore,cafeBazaar',
             'skuCode' => 'required|string|max:100',
             'purchaseToken' => 'required|string',
             'orderId' => 'required|string|max:250',
@@ -144,6 +145,8 @@ class VerifyPurchase extends Controller
             } elseif ($attribute['gateway'] == 'appStore') {
 
                 $playstore = new Purchase(new AppStoreSubscription());
+            } elseif ($attribute['gateway'] == 'cafeBazaar') {
+                $playstore = new Purchase(new CafeBazaarSubscription());
             } else {
                 return response()->json([
                     'message' => '',
