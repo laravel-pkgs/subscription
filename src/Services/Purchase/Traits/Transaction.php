@@ -18,8 +18,8 @@ trait Transaction
             if ($subscriptionUserId) {
                 $transaction->subscription_user_id = $subscriptionUserId;
             }
-        } catch (\Exception) {
-
+        } catch (\Exception $exception) {
+            throw $exception;
         }
 
         $transaction->save();
