@@ -13,7 +13,7 @@ class Responser extends Response implements SubscriptionResponse
         $data = [
             'message' => $message,
             'data' => $data,
-            'status' => true
+            'status' => 1
         ];
 
         return response()->json($data, $status, $headers);
@@ -24,7 +24,7 @@ class Responser extends Response implements SubscriptionResponse
         $data = [
             'message' => $message,
             'exception' => $data,
-            'status' => false
+            'status' => 0
         ];
 
         return response()->json($data, $status, $headers);
@@ -35,7 +35,7 @@ class Responser extends Response implements SubscriptionResponse
         $data = [
             'message' => $message,
             'data' => $data,
-            'status' => true
+            'status' => 1
         ];
 
         return response()->json($data, $status, $headers);
