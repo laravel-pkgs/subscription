@@ -42,9 +42,9 @@ class CafeBazaarSubscription implements HasVerifyPurchase
             ->where('sku_code', $skuCode)
             ->firstOrFail();
 
-        $transaction = $this->verifyTransaction($transaction, $response->json());
         $transaction->subscription_id = $subscription->id;
         $transaction->save();
+        $transaction = $this->verifyTransaction($transaction, $response->json());
 
         return ['status' => true, 'transaction' => $transaction];
     }
