@@ -44,7 +44,7 @@ class RetryCheckPendingTransaction extends Command
 
                 if ($transaction->agent_type == AgentType::APP_STORE) {
 
-                    if (Str::contains($transaction->sku_code, 'subscription')) {
+                    if (Str::contains($transaction->product_id, 'subscription')) {
                         $playStore = new Purchase(new AppStoreSubscription());
                     } else {
                         $playstore = new Purchase(new Appstore());
@@ -53,7 +53,7 @@ class RetryCheckPendingTransaction extends Command
 
                 } elseif($transaction->agent_type == AgentType::GOOGLE_PLAY) {
 
-                    if (Str::contains($transaction->sku_code, 'subscription')) {
+                    if (Str::contains($transaction->product_id, 'subscription')) {
                         $playStore = new Purchase(new PlayStoreSubscription());
                     } else {
                         $playstore = new Purchase(new Playstore());
