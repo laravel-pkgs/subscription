@@ -27,7 +27,7 @@ trait Transaction
         return $transaction;
     }
 
-    public function failedTransaction(SubscriptionTransaction $transaction, array $response, string $status): SubscriptionTransaction
+    public function failedTransaction(SubscriptionTransaction $transaction, ?array $response, string $status): SubscriptionTransaction
     {
         $transaction->status = $status;
         $transaction->response_data = $response;
