@@ -41,23 +41,12 @@ class RetryCheckPendingTransaction extends Command
         foreach ($transactions as $transaction) {
             try {
 
-
                 if ($transaction->agent_type == AgentType::APP_STORE) {
 
-                    if (Str::contains($transaction->product_id, 'subscription')) {
-                        $playStore = new Purchase(new AppStoreSubscription());
-                    } else {
-                        $playstore = new Purchase(new Appstore());
-                    }
-
+                    $playstore = Str::contains($transaction->product_id, 'subscription') ? new Purchase(new AppStoreSubscription()) : new Purchase(new Appstore());
 
                 } elseif($transaction->agent_type == AgentType::GOOGLE_PLAY) {
-
-                    if (Str::contains($transaction->product_id, 'subscription')) {
-                        $playStore = new Purchase(new PlayStoreSubscription());
-                    } else {
-                        $playstore = new Purchase(new Playstore());
-                    }
+                    $playStore = Str::contains($transaction->product_id, 'subscription') ? new Purchase(new PlayStoreSubscription()) : new Purchase(new Playstore());
 
                 } else {
                     return ;
