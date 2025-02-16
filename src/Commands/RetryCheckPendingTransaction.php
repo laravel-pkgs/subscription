@@ -35,7 +35,7 @@ class RetryCheckPendingTransaction extends Command
      */
     public function handle()
     {
-        $transactions = SubscriptionTransaction::query()->where('created_at', '>', now()->addDays(-2))
+        $transactions = SubscriptionTransaction::query()->where('created_at', '>', now()->addDays(-24))
             ->whereIn('status', [Status::PENDING, Status::INIT])->get();
 
         foreach ($transactions as $transaction) {
