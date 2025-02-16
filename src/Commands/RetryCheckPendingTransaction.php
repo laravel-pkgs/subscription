@@ -64,9 +64,9 @@ class RetryCheckPendingTransaction extends Command
                 }
 
                 $playstore->retry($transaction);
-                $this->info("apply transaction ID: {$transaction}");
+                $this->info("apply transaction ID: {$transaction->id}");
             } catch (\Exception $e) {
-                $this->error("error in transaction ID: {$transaction}");
+                $this->error("error in transaction ID: {$transaction->id} error is {$e->getMessage()}");
             }
         }
     }
