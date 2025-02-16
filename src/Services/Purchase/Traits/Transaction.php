@@ -2,9 +2,11 @@
 
 namespace IICN\Subscription\Services\Purchase\Traits;
 
+use App\Models\User;
 use IICN\Subscription\Constants\Status;
 use IICN\Subscription\Models\SubscriptionTransaction;
 use IICN\Subscription\Subscription;
+use IICN\Subscription\Services\Subscription as SubscriptionService;
 
 trait Transaction
 {
@@ -14,7 +16,14 @@ trait Transaction
         $transaction->response_data = $response;
 
         try {
-            $subscriptionUserId = Subscription::create($transaction->subscription_id);
+            if (app()->runningInConsole()) {
+
+                $subscriptionUserId = (new SubscriptionService(User::query()->find($transaction->user_id)))->create($transaction->subscription_id);
+
+            } else {
+                $subscriptionUserId = Subscription::create($transaction->subscription_id);
+            }
+
             if ($subscriptionUserId) {
                 $transaction->subscription_user_id = $subscriptionUserId;
             }

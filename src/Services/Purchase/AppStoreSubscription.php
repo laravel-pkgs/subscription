@@ -44,7 +44,6 @@ class AppStoreSubscription implements HasVerifyPurchase
             ->firstOrFail();
 
         $status = $this->getStatus($response->json('status'));
-
         if ($status == Status::SUCCESS) {
             $transaction->subscription_id = $subscription->id;
             $transaction->save();
