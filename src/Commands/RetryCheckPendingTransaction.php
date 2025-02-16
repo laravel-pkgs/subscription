@@ -43,16 +43,17 @@ class RetryCheckPendingTransaction extends Command
 
                 if ($transaction->agent_type == AgentType::APP_STORE) {
 
-                    $playstore = Str::contains($transaction->product_id, 'subscription') ? new Purchase(new AppStoreSubscription()) : new Purchase(new Appstore());
+                    $appStore = Str::contains($transaction->product_id, 'subscription') ? new Purchase(new AppStoreSubscription()) : new Purchase(new Appstore());
+                    $appStore->retry($transaction);
 
                 } elseif($transaction->agent_type == AgentType::GOOGLE_PLAY) {
                     $playStore = Str::contains($transaction->product_id, 'subscription') ? new Purchase(new PlayStoreSubscription()) : new Purchase(new Playstore());
+                    $playStore->retry($transaction);
 
                 } else {
                     return ;
                 }
 
-                $playstore->retry($transaction);
                 $this->info("apply transaction ID: {$transaction->id}");
             } catch (\Exception $e) {
                 $this->error("error in transaction ID: {$transaction->id} error is {$e->getMessage()}");
