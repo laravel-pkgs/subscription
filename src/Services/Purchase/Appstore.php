@@ -42,7 +42,7 @@ class Appstore implements HasVerifyPurchase
             $transaction = $this->verifyTransaction($transaction, $response->json());
             return ['status' => true, 'transaction' => $transaction];
         } else {
-            $transaction = $this->failedTransaction($transaction, $response->json(), $status);
+            $transaction = $this->failedTransaction($transaction, [$response->json()], $status);
             return ['status' => false, 'transaction' => $transaction];
         }
     }
