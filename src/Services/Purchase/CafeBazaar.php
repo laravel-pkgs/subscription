@@ -19,7 +19,7 @@ class CafeBazaar implements HasVerifyPurchase
     public string $secret;
     public function __construct()
     {
-        $this->secret = config('subscription.apple.secret');
+        $this->secret = config('subscription.cafe_bazaar.secret');
     }
 
     public function verifyPurchase(SubscriptionTransaction $transaction): array

@@ -31,6 +31,10 @@ return [
         'secret' => env("SUBSCRIPTION_APPLE_SECRET"),
     ],
 
+    'cafe_bazaar' => [
+        'secret' => env("CAFEBAZAAR_API_SECRET"),
+    ],
+
 
     /*
     |--------------------------------------------------------------------------
