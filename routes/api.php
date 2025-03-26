@@ -17,5 +17,9 @@ Route::prefix('subscription/api/v1')->middleware(config('subscription.middleware
         Route::namespace('SubscriptionCoupon')->middleware('auth.subscription')->group(function () {
             Route::post('subscription-coupons', 'StoreWithSubscriptionCoupon');
         });
+
+        Route::namespace('SubscriptionAdmin')->middleware('auth.subscription')->group(function () {
+
+        });
     });
 });

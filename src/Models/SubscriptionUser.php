@@ -2,6 +2,7 @@
 
 namespace IICN\Subscription\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class SubscriptionUser extends Pivot
@@ -52,5 +53,10 @@ class SubscriptionUser extends Pivot
                 'new' => []
             ]);
         });
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
