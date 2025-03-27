@@ -22,6 +22,6 @@ class SubscriptionController extends Controller
             ->with(['user', 'subscription'])
             ->paginate();
 
-        return GenericResponse::success(SubscriptionUserResources::collection($subscriptionUser));
+        return GenericResponse::success(data: SubscriptionUserResources::collection($subscriptionUser));
     }
 }
