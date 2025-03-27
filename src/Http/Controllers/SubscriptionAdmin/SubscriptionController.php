@@ -5,7 +5,7 @@ namespace IICN\Subscription\Http\Controllers\SubscriptionAdmin;
 use IICN\Subscription\Http\Controllers\Controller;
 use IICN\Subscription\Models\SubscriptionUser;
 use Modules\Common\Http\Responses\GenericResponse;
-use IICN\Subscription\Http\Resources\SubscriptionUserResource;
+use IICN\Subscription\Http\Resources\SubscriptionUserResources;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -21,6 +21,6 @@ class SubscriptionController extends Controller
             ->with(['user', 'subscription'])
             ->paginate();
 
-        return GenericResponse::success(SubscriptionUserResource::collection($subscriptionUser));
+        return GenericResponse::success(SubscriptionUserResources::collection($subscriptionUser));
     }
 }
