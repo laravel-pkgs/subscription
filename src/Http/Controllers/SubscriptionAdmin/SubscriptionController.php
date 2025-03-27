@@ -18,6 +18,7 @@ class SubscriptionController extends Controller
                 AllowedFilter::exact('user_id'),
                 AllowedFilter::exact('subscription_id'),
             ])
+            ->orderBy('created_at', 'desc')
             ->with(['user', 'subscription'])
             ->paginate();
 
