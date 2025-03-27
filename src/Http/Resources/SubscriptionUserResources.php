@@ -2,7 +2,6 @@
 
 namespace IICN\Subscription\Http\Resources;
 
-use IICN\Subscription\Subscription;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
 use Modules\Core\Http\Resources\UserResource;
@@ -19,7 +18,7 @@ class SubscriptionUserResources extends JsonResource
             'subscription_id' => $this->subscription_id,
             'remaining_number' => json_decode($this->remaining_number, true),
             'user' => new UserResource($this->whenLoaded('user')),
-            'subscription' => Subscription::
+            'subscription' => new SubscriptionResources($this->whenLoaded('subscription')),
             'expiry_at' => $this->expiry_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

@@ -18,8 +18,8 @@ Route::prefix('subscription/api/v1')->middleware(config('subscription.middleware
             Route::post('subscription-coupons', 'StoreWithSubscriptionCoupon');
         });
 
-        Route::namespace('SubscriptionAdmin')->middleware('auth.subscription')->group(function () {
-
+        Route::namespace('SubscriptionAdmin')->middleware(['role:' . \Modules\Core\Enums\RolesEnum::Admin->value], 'auth.api_or_passport')->group(function () {
+            Route::get('subscription-users', 'SubscriptionController@userSubscriptions');
         });
     });
 });

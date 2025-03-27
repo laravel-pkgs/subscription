@@ -59,4 +59,9 @@ class SubscriptionUser extends Pivot
     {
         return $this->belongsTo(User::class);
     }
+
+    public function subscription()
+    {
+        return $this->belongsTo(Subscription::class);
+    }
 }
