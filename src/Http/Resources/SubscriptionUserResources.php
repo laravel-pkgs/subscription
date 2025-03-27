@@ -16,7 +16,7 @@ class SubscriptionUserResources extends JsonResource
             'id' => $this->id,
             'user_id' => $this->user_id,
             'subscription_id' => $this->subscription_id,
-            'remaining_number' => json_decode($this->remaining_number, true),
+            'remaining_number' => $this->remaining_number,
             'user' => new UserResource($this->whenLoaded('user')),
             'subscription' => new SubscriptionResources($this->whenLoaded('subscription')),
             'expiry_at' => $this->expiry_at,
