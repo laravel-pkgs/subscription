@@ -35,7 +35,7 @@ class SubscriptionController extends Controller
         $data = [
             'today' => SubscriptionTransaction::query()
                 ->with(['subscription'])
-                ->select('subscription_id', DB::raw('COUNT(*) as count'))
+                ->select('subscription_id', DB::raw('COUNT(*) as count'), 'agent_type')
                 ->where('status', $successStatus)
                 ->whereDate('created_at', $now->toDateString())
                 ->groupBy('subscription_id', 'agent_type')
@@ -43,7 +43,7 @@ class SubscriptionController extends Controller
 
             'last_7_days' => SubscriptionTransaction::query()
                 ->with('subscription')
-                ->select('subscription_id', DB::raw('COUNT(*) as count'))
+                ->select('subscription_id', DB::raw('COUNT(*) as count'), 'agent_type')
                 ->where('status', $successStatus)
                 ->whereBetween('created_at', [$now->copy()->subDays(6)->startOfDay(), $now])
                 ->groupBy('subscription_id', 'agent_type')
@@ -51,7 +51,7 @@ class SubscriptionController extends Controller
 
             'last_month' => SubscriptionTransaction::query()
                 ->with('subscription')
-                ->select('subscription_id', DB::raw('COUNT(*) as count'))
+                ->select('subscription_id', DB::raw('COUNT(*) as count'), 'agent_type')
                 ->where('status', $successStatus)
                 ->whereBetween('created_at', [$now->copy()->subMonth()->startOfMonth(), $now->copy()->subMonth()->endOfMonth()])
                 ->groupBy('subscription_id', 'agent_type')
@@ -59,7 +59,7 @@ class SubscriptionController extends Controller
 
             'last_year' => SubscriptionTransaction::query()
                 ->with('subscription')
-                ->select('subscription_id', DB::raw('COUNT(*) as count'))
+                ->select('subscription_id', DB::raw('COUNT(*) as count'), 'agent_type')
                 ->where('status', $successStatus)
                 ->whereYear('created_at', $now->subYear()->year)
                 ->groupBy('subscription_id', 'agent_type')
@@ -67,7 +67,7 @@ class SubscriptionController extends Controller
 
             'total' => SubscriptionTransaction::query()
                 ->with('subscription')
-                ->select('subscription_id', DB::raw('COUNT(*) as count'))
+                ->select('subscription_id', DB::raw('COUNT(*) as count'), 'agent_type')
                 ->where('status', $successStatus)
                 ->groupBy('subscription_id', 'agent_type')
                 ->get(),
