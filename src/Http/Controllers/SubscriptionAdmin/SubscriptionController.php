@@ -38,7 +38,7 @@ class SubscriptionController extends Controller
                 ->select('subscription_id', DB::raw('COUNT(*) as count'))
                 ->where('status', $successStatus)
                 ->whereDate('created_at', $now->toDateString())
-                ->groupBy('subscription_id')
+                ->groupBy('subscription_id', 'agent_type')
                 ->get(),
 
             'last_7_days' => SubscriptionTransaction::query()
@@ -46,7 +46,7 @@ class SubscriptionController extends Controller
                 ->select('subscription_id', DB::raw('COUNT(*) as count'))
                 ->where('status', $successStatus)
                 ->whereBetween('created_at', [$now->copy()->subDays(6)->startOfDay(), $now])
-                ->groupBy('subscription_id')
+                ->groupBy('subscription_id', 'agent_type')
                 ->get(),
 
             'last_month' => SubscriptionTransaction::query()
@@ -54,7 +54,7 @@ class SubscriptionController extends Controller
                 ->select('subscription_id', DB::raw('COUNT(*) as count'))
                 ->where('status', $successStatus)
                 ->whereBetween('created_at', [$now->copy()->subMonth()->startOfMonth(), $now->copy()->subMonth()->endOfMonth()])
-                ->groupBy('subscription_id')
+                ->groupBy('subscription_id', 'agent_type')
                 ->get(),
 
             'last_year' => SubscriptionTransaction::query()
@@ -62,14 +62,14 @@ class SubscriptionController extends Controller
                 ->select('subscription_id', DB::raw('COUNT(*) as count'))
                 ->where('status', $successStatus)
                 ->whereYear('created_at', $now->subYear()->year)
-                ->groupBy('subscription_id')
+                ->groupBy('subscription_id', 'agent_type')
                 ->get(),
 
             'total' => SubscriptionTransaction::query()
                 ->with('subscription')
                 ->select('subscription_id', DB::raw('COUNT(*) as count'))
                 ->where('status', $successStatus)
-                ->groupBy('subscription_id')
+                ->groupBy('subscription_id', 'agent_type')
                 ->get(),
         ];
     }
