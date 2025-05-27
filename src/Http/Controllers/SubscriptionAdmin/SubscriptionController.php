@@ -32,7 +32,7 @@ class SubscriptionController extends Controller
         $now = now();
         $successStatus = 'success';
 
-        return [
+        $data = [
             'today' => SubscriptionTransaction::query()
                 ->with(['subscription'])
                 ->select('subscription_id', DB::raw('COUNT(*) as count'))
@@ -72,5 +72,7 @@ class SubscriptionController extends Controller
                 ->groupBy('subscription_id', 'agent_type')
                 ->get(),
         ];
+
+        return GenericResponse::success(data: $data);
     }
 }

@@ -20,7 +20,7 @@ Route::prefix('subscription/api/v1')->middleware(config('subscription.middleware
             Route::post('subscription-coupons', 'StoreWithSubscriptionCoupon');
         });
 
-        Route::namespace('SubscriptionAdmin')->middleware(['role:' . PermissionsEnum::FeedbackAndFaq->value], 'auth.api_or_passport')->group(function () {
+        Route::namespace('SubscriptionAdmin')->middleware(['role_or_permission:' . PermissionsEnum::FeedbackAndFaq->value], 'auth.api_or_passport')->group(function () {
             Route::get('subscription-users', 'SubscriptionController@userSubscriptions');
             Route::get('subscription-users-statistics', 'SubscriptionController@userSubscriptionGroupedByMonth');
 
