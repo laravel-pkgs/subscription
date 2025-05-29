@@ -33,7 +33,7 @@ class Appstore implements HasVerifyPurchase
         }
 
         if ($response->json('status') == 21007) {
-            $response = $this->request($transaction->purchase_token, "https://sandbox.itunes.apple.com/verifyReceipt/");
+            $response = $this->request($transaction->purchase_token, "https://sandbox.itunes.apple.com/verifyReceipt");
         }
 
         $status = $this->getStatus($response->json('status'));

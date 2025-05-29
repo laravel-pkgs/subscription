@@ -51,7 +51,7 @@ class AppStoreSubscription implements HasVerifyPurchase
             $transaction = $this->verifyTransaction($transaction, $response->json());
             return ['status' => true, 'transaction' => $transaction];
         } elseif ($response->json('status') == 21007) {
-            $response = $this->request($transaction->purchase_token, "https://sandbox.itunes.apple.com/verifyReceipt/");
+            $response = $this->request($transaction->purchase_token, "https://sandbox.itunes.apple.com/verifyReceipt");
             $transaction->subscription_id = $subscription->id;
             $transaction->save();
 
